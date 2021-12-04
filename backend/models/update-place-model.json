@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "place",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 3
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "city": {
+      "type": "string",
+      "minLength": 3
+    },
+    "country": {
+      "type": "string",
+      "minLength": 3
+    }
+  },
+  "required": [
+    "name",
+    "country"
+  ],
+  "additionalProperties": false
+}

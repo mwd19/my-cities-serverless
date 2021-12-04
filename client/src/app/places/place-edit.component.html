@@ -1,0 +1,174 @@
+<div class="place-edit">
+    <h1>{{title}}</h1>
+
+    <p *ngIf="this.id && !place"><em>Loading...</em></p>
+
+    <div class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div *ngIf="form.invalid"
+             class="alert alert-danger">
+              <strong>ERROR</strong>:
+              A place with the same <i>name</i>, <i>lat</i>,
+              <i>lon</i> and <i>city</i> and <i>country</i> already exists.
+        </div>
+      
+        <div class="form-group">
+            <label for="name">Place name:</label>
+            <br />
+            <input type="text" id="name"
+                formControlName="name" required
+                placeholder="Place name..."
+                class="form-control"
+                />
+
+            <div *ngIf="hasError('name')"
+                 class="invalid-feedback">
+                <div *ngIf="form.get('name').errors?.required">
+                  Name is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="latitude">Place latitude:</label>
+            <br />
+            <input type="text" id="latitude"
+                   formControlName="latitude" required
+                   placeholder="Latitude..."
+                   class="form-control" />
+
+            <div *ngIf="hasError('latitude')"
+                  class="invalid-feedback">
+                <div *ngIf="form.get('latitude').errors?.required">
+                  Latitude is required.
+                </div>
+                <div *ngIf="form.get('latitude').errors?.pattern">
+                  Latitude requires a positive or negative number with 0-4 decimal values.
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="longitude">Place longitude:</label>
+            <br />
+            <input type="text" id="longitude"
+                   formControlName="longitude" required
+                   placeholder="Longitude..."
+                   class="form-control" />
+
+            <div *ngIf="hasError('longitude')"
+                 class="invalid-feedback">
+                <div *ngIf="form.get('longitude').errors?.required">
+                  Longitude is required.
+                </div>
+                <div *ngIf="form.get('longitude').errors?.pattern">
+                  Name is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+          <label for="city">City:</label>
+          <br />
+          <input type="text" id="city"
+                 formControlName="city" required
+                 placeholder="City..."
+                 class="form-control" />
+
+          <div *ngIf="hasError('city')"
+               class="invalid-feedback">
+              <div *ngIf="form.get('city').errors?.required">
+                City is required.
+              </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="country">Country:</label>
+          <br />
+          <input type="text" id="country"
+              formControlName="country" required
+              placeholder="Country..."
+              class="form-control"
+              />
+
+          <div *ngIf="hasError('country')"
+               class="invalid-feedback">
+              <div *ngIf="form.get('country').errors?.required">
+                Country is required.
+              </div>
+          </div>
+        </div>
+      
+        <!-- <div class="form-group">
+            <label for="countryId">Country:</label>
+            <br />
+            <mat-form-field *ngIf="countries | async as result">
+              <mat-label>Select a Country...</mat-label>
+              <mat-select id="countryId" formControlName="countryId">
+                <mat-option *ngFor="let country of result.data" [value]="country.id">
+                  {{country.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div *ngIf="hasError('countryId')"
+                 class="invalid-feedback">
+                <div *ngIf="form.get('countryId').errors?.required">
+                  Please select a Country.
+                </div>
+            </div>
+        </div> -->
+
+        <div class="form-group commands">
+            <button *ngIf="id" type="submit"
+                    (click)="onSubmit()"
+                    [disabled]="form.invalid"
+                    class="btn btn-success">
+                Save
+            </button>
+            <button *ngIf="!id" type="submit"
+                    (click)="onSubmit()"
+                    [disabled]="form.invalid"
+                    class="btn btn-success">
+                Create
+            </button>
+            <button type="button"
+                    [routerLink]="['/places']"
+                    class="btn">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Form debug info panel -->
+<!-- <div class="card bg-light mb-3">
+  <div class="card-header">Form Debug Info</div>
+  <div class="card-body">
+    <div class="card-text">
+      <div><strong>Form value:</strong></div>
+      <div class="help-block">
+          {{ form.value | json }}
+      </div>
+      <div class="mt-2"><strong>Form status:</strong></div>
+      <div class="help-block">
+          {{ form.status | json }}
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- Form activity log panel -->
+<!-- <div class="card bg-light mb-3">
+  <div class="card-header">Form Activity Log</div>
+  <div class="card-body">
+    <div class="card-text">
+      <div class="help-block">
+        <span *ngIf="activityLog" 
+            [innerHTML]="activityLog"></span>
+      </div>
+    </div>
+  </div>
+</div> -->
