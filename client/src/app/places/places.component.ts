@@ -11,14 +11,20 @@ import { Place } from './place';
 import { PlaceService } from './place.service';
 import { ApiResult } from '../base.service';
 
+import {SelectItem} from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
+
 @Component({
   selector: 'app-places',
   templateUrl: './places.component.html',
-  styleUrls: ['./places.component.css']
+  styleUrls: ['./places.component.scss']
 })
 export class PlacesComponent implements OnInit {
   public displayedColumns: string[] = ['id', 'name', 'latitude', 'longitude', 'city', 'country'];
-  public places: MatTableDataSource<Place>;
+  public places: Place[];
+
+  selectedPlace: Place;
+  displayDialog: boolean;
 
   defaultPageIndex: number = 0;
   defaultPageSize: number = 10;
@@ -33,12 +39,32 @@ export class PlacesComponent implements OnInit {
 
   filterTextChanged: Subject<string> = new Subject<string>();
 
-  constructor(
-    private placeService: PlaceService) {
+  sortOptions: SelectItem[];
+  sortOrder: number;
+  sortField: string;
+
+  constructor(private placeService: PlaceService, private primengConfig: PrimeNGConfig) {
   }
 
   ngOnInit() {
     this.loadData(null);
+
+    this.sortOptions = [
+      {label: 'Name High to Low', value: '!price'},
+      {label: 'Name Low to High', value: 'price'}
+    ];
+    this.primengConfig.ripple = true;
+  }
+
+  selectPlace(event: Event, place: Place) {
+    console.log(place);
+    this.selectedPlace = place;
+    this.displayDialog = true;
+    event.preventDefault();
+  }
+
+  onDialogHide() {
+    this.selectedPlace = null;
   }
 
   // debounce filter text changes
@@ -93,7 +119,22 @@ export class PlacesComponent implements OnInit {
         // this.paginator.length = result.totalCount;
         // this.paginator.pageIndex = result.pageIndex;
         // this.paginator.pageSize = result.pageSize;
-        this.places = new MatTableDataSource<Place>(result.data);
+        console.log(result.items);
+        this.places = result.items;
+        console.log(this.places); 
       }, error => console.error(error));
   }
+
+  onPlaceDelete(placeId: string) {
+    try {
+      this.placeService.delete(placeId).subscribe(result => {
+        alert("Place " + placeId + " has been deleted.");
+        console.log("Place " + placeId + " has been deleted.");
+        this.loadData(null);
+      }, error => console.error(error));
+    } catch {
+      alert('Todo deletion failed')
+    }
+  }
+
 }

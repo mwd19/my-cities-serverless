@@ -26,6 +26,14 @@ import { FooterComponent } from './footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
 import { TokenInterceptor } from '../auth/token.interceptor';
 
+import {DataViewModule} from 'primeng/dataview';
+import {ButtonModule} from 'primeng/button';
+import {PanelModule} from 'primeng/panel';
+import {DropdownModule} from 'primeng/dropdown';
+import {DialogModule} from 'primeng/dialog';
+import {InputTextModule} from 'primeng/inputtext';
+import {RippleModule} from 'primeng/ripple';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,23 +70,14 @@ import { TokenInterceptor } from '../auth/token.interceptor';
           }
         }]
       },
-      // Specify configuration for the interceptor              
-      // httpInterceptor: {
-      //   allowedList: [
-      //   {
-      //     // Match any request that starts 'https://YOUR_DOMAIN/api/v2/' (note the asterisk)
-      //     uri: apiEndpoint + '*',
-      //     tokenOptions: {
-      //       // The attached token should target this audience
-      //       audience: apiEndpoint,
-
-      //       // The attached token should have these scopes
-      //       scope: 'read:current_user'
-      //     }
-      //   }
-      //   ]
-      // }
     }),
+    DataViewModule,
+    PanelModule,
+    DialogModule,
+    DropdownModule,
+    InputTextModule,
+    ButtonModule,
+    RippleModule,
   ],
   providers: [
     { 

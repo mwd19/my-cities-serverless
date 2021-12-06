@@ -33,7 +33,7 @@ export class PlaceEditComponent
   // the place object id, as fetched from the active route:
   // It's NULL when we're adding a new place,
   // and not NULL when we're editing an existing one.
-  id?: number;
+  id?: string;
 
   // the countries observable for the select (using async pipe)
   // countries: Observable<ApiResult<Country>>;
@@ -43,6 +43,8 @@ export class PlaceEditComponent
 
   // Notifier subject (to avoid memory leaks)
   private destroySubject: Subject<boolean> = new Subject<boolean>();
+
+  selectedFiles: FileList;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -108,17 +110,18 @@ export class PlaceEditComponent
 
   loadData() {
 
-    // load countries
-    // this.loadCountries();
-
     // retrieve the ID from the 'id'
-    this.id = +this.activatedRoute.snapshot.paramMap.get('id');
+    this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    console.log(this.id);
+    
     if (this.id) {
       // EDIT MODE
 
       // fetch the place from the server
       this.placeService.get<Place>(this.id).subscribe(result => {
-        this.place = result;
+        console.log(result);
+        
+        this.place = result.place;
         this.title = "Edit - " + this.place.name;
 
         // update the form with the place value
@@ -181,20 +184,58 @@ export class PlaceEditComponent
     }
   }
 
-  isDupePlace(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-      var place = <Place>{};
-      place.id = (this.id) ? this.id : 0;
-      place.name = this.form.get("name").value;
-      place.latitude = this.form.get("latitude").value;
-      place.longitude = this.form.get("longitude").value;
-      place.city = this.form.get("city").value;
-      place.country = this.form.get("country").value;
+  // isDupePlace(): AsyncValidatorFn {
+  //   return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+  //     var place = <Place>{};
+  //     place.id = (this.id) ? this.id : 0;
+  //     place.name = this.form.get("name").value;
+  //     place.latitude = this.form.get("latitude").value;
+  //     place.longitude = this.form.get("longitude").value;
+  //     place.city = this.form.get("city").value;
+  //     place.country = this.form.get("country").value;
 
-      return this.placeService.isDupePlace(place)
-        .pipe(map(result => {
-          return (result ? { isDupePlace: true } : null);
-        }));
-    }
+  //     return this.placeService.isDupePlace(place)
+  //       .pipe(map(result => {
+  //         return (result ? { isDupePlace: true } : null);
+  //       }));
+  //   }
+  // }
+  upload() {
+
+    console.log(this.id);
+      
+    var place = (this.id) ? this.place : <Place>{};
+
+      const file = this.selectedFiles.item(0);
+      console.log(file);
+      
+      // this.placeService.uploadfile(file);
+      try {
+        if (!file) {
+          alert('File should be selected')
+          return
+        }
+        console.log(this.id);
+        
+        // this.setUploadState(UploadState.FetchingPresignedUrl)
+        this.placeService.getUploadUrl(this.id).subscribe(
+          // this.setUploadState(UploadState.UploadingFile)
+          uploadUrl => {
+            console.log(uploadUrl);
+            this.placeService.uploadFile(uploadUrl.uploadUrl, file).subscribe( () =>
+              { alert('File was uploaded!'); }
+            )
+          }
+        )
+
+      } catch (e) {
+        alert('Could not upload a file: ')
+      } finally {
+        // this.setUploadState(UploadState.NoUpload)
+      }
+  }
+    
+  selectFile(event) {
+    this.selectedFiles = event.target.files;
   }
 }

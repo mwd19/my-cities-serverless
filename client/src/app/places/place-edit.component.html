@@ -5,12 +5,30 @@
 
     <div class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
 
-        <div *ngIf="form.invalid"
-             class="alert alert-danger">
-              <strong>ERROR</strong>:
-              A place with the same <i>name</i>, <i>lat</i>,
-              <i>lon</i> and <i>city</i> and <i>country</i> already exists.
-        </div>
+      <!-- <div>
+        <h1>Upload new image</h1>
+
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Field>
+            <label>File</label>
+            <input
+              type="file"
+              accept="image/*"
+              placeholder="Image to upload"
+              onChange={this.handleFileChange}
+            />
+          </Form.Field>
+
+          {this.renderButton()}
+        </Form> 
+      </div> -->
+      <div>
+      <label class="btn btn-default">
+        <input type="file" (change)="selectFile($event)">
+      </label>
+    </div>
+      
+      <button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload()">Upload</button>
       
         <div class="form-group">
             <label for="name">Place name:</label>
