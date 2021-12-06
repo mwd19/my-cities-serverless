@@ -43,6 +43,11 @@ export async function createPlace(createPlaceRequest: CreatePlaceRequest, userId
     return await placesAccess.createPlace(placeItem)
 }
 
+export async function getPlace(placeId: string, userId: string) {
+    logger.info('Get the place: ', placeId)
+    return await placesAccess.getPlace(placeId, userId)
+}
+
 export async function updatePlace(updatePlaceRequest: UpdatePlaceRequest, placeId: string, userId: string,) {
     logger.info('Updating place: ', placeId)
     return await placesAccess.updatePlace(placeId, userId, updatePlaceRequest)

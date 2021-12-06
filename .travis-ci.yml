@@ -22,4 +22,4 @@ deploy:
   bucket: "places-frontend-bucket"
   region: "us-east-1"
   skip_cleanup: true
-  local_dir: dist/yourApp
+  local_dir: client/dist

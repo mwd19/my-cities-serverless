@@ -89,6 +89,24 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLACES_TABLE}/index/${self:provider.environment.PLACES_CREATED_AT_INDEX}
 
+  GetPlace:
+    handler: src/lambda/http/getPlace.handler
+    events:
+      - http:
+          method: get
+          path: places/{placeId}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLACES_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PLACES_TABLE}/index/${self:provider.environment.PLACES_CREATED_AT_INDEX}
+  
   CreatePlace:
     handler: src/lambda/http/createPlace.handler
     events:

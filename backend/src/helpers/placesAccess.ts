@@ -42,6 +42,21 @@ export class PlacesAccess {
         return placeItem
     }
 
+    async getPlace(placeId: string, userId: string): Promise<PlaceItem> {
+        const result = await this.docClient.query({
+            TableName: this.placesTable,
+            KeyConditionExpression: 'userId = :userId AND placeId = :placeId',
+            ExpressionAttributeValues: {
+                ':userId': userId,
+                ':placeId': placeId
+            }
+        }).promise()
+
+        logger.info('Return a place: ', result.Items[0] as PlaceItem)
+
+        return result.Items[0] as PlaceItem
+    }
+
     async updatePlace(placeId: string, userId: string, placeUpdate: PlaceUpdate) {
         await this.docClient.update({
             TableName: this.placesTable,
@@ -52,7 +67,9 @@ export class PlacesAccess {
             UpdateExpression: "set #name = :name, #city=:city, #country=:country",
             ExpressionAttributeValues: {
                 ":name": placeUpdate.name,
-                ":city": placeUpdate.country,
+                ":latitude": placeUpdate.latitude,
+                ":longitude": placeUpdate.longitude,
+                ":city": placeUpdate.city,
                 ":country": placeUpdate.country,
             },
             ExpressionAttributeNames: {
