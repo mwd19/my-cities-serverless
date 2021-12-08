@@ -4,7 +4,7 @@ import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
 import { CreatePlaceRequest } from '../../requests/CreatePlaceRequest'
 import { getUserId } from '../utils';
-import { createPlace } from '../../helpers/places'
+import { createPlace } from '../../businessLogic/places'
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {

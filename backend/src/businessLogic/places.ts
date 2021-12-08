@@ -1,5 +1,5 @@
-import { PlacesAccess } from './placesAccess'
-import { AttachmentUtils } from './attachmentUtils';
+import { PlacesAccess } from '../dataLayer/placesAccess'
+import { AttachmentUtils } from '../fileStorage/attachmentUtils';
 import { PlaceItem } from '../models/PlaceItem'
 import { CreatePlaceRequest } from '../requests/CreatePlaceRequest'
 import { UpdatePlaceRequest } from '../requests/UpdatePlaceRequest'
