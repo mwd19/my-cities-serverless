@@ -37,9 +37,13 @@ To run the frontend application first edit the `client/src/auth_config.json` fil
 
 ```
 cd client
+npm install -g @angular/cli
 npm install
 npm run start
 ```
 
 Postman collection
 You can find a Postman collection of the backend API [here](https://github.com/mwd19/my-places-serverless/blob/master/Capstone%20Project.postman_collection.json).
+
+## Perspective
+Integrate Google Maps API
