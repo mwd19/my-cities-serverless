@@ -33,7 +33,7 @@ sls deploy -v
 
 ### Frontend
 
-To run the frontend application first edit the `client/src/auth_config.json` file to set correct parameters. And then run the following commands:
+To run the frontend application run the following commands:
 
 ```
 cd client
