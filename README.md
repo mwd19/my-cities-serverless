@@ -2,7 +2,7 @@
 
 ## Functionality of the application
 
-My places is a simple application that allow users track and register the places they have visited.
+My places is a simple application that allow users track and register the places they had visited.
 The application allows creating/removing/updating/fetching places (CRUD operations) and for each place item we can optionally have an attachment image. Each user only has access to places items that he/she had created.
 
 ## Stack
