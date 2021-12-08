@@ -18,21 +18,20 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AuthModule, AuthHttpInterceptor } from '@auth0/auth0-angular';
 import { environment as env } from '../environments/environment';
-// import { apiEndpoint, authConfig } from '../config';
 import { AuthButtonComponent } from './auth-button/auth-button.component'
 import { LogoutButtonComponent } from './logout-button/logout-button.component'
 import { LoadingComponent } from './loading/loading.component'
-import { FooterComponent } from './footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
-import { TokenInterceptor } from '../auth/token.interceptor';
+import { TokenInterceptor } from './auth/token.interceptor';
 
-import {DataViewModule} from 'primeng/dataview';
-import {ButtonModule} from 'primeng/button';
-import {PanelModule} from 'primeng/panel';
-import {DropdownModule} from 'primeng/dropdown';
-import {DialogModule} from 'primeng/dialog';
-import {InputTextModule} from 'primeng/inputtext';
-import {RippleModule} from 'primeng/ripple';
+import { DataViewModule } from 'primeng/dataview';
+import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
+import { DropdownModule } from 'primeng/dropdown';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { RippleModule } from 'primeng/ripple';
+import { GMapModule } from 'primeng/gmap';
 
 @NgModule({
   declarations: [
@@ -44,7 +43,6 @@ import {RippleModule} from 'primeng/ripple';
     AuthButtonComponent,
     LogoutButtonComponent,
     LoadingComponent,
-    FooterComponent,
     ProfileComponent
   ],
   imports: [
@@ -59,13 +57,9 @@ import {RippleModule} from 'primeng/ripple';
     AuthModule.forRoot({
       ...env.auth,
       httpInterceptor: {
-        allowedList: [{ 
+        allowedList: [{
           uri: `${env.dev.serverUrl}` + '*',
           tokenOptions: {
-            // The attached token should target this audience
-            // audience: `${env.dev.serverUrl}`,
-    
-            // The attached token should have these scopes
             scope: 'read:current_user'
           }
         }]
@@ -78,13 +72,13 @@ import {RippleModule} from 'primeng/ripple';
     InputTextModule,
     ButtonModule,
     RippleModule,
+    GMapModule,
   ],
   providers: [
-    { 
-      provide: HTTP_INTERCEPTORS, 
-      // useClass: AuthHttpInterceptor, 
-      useClass: TokenInterceptor, 
-      multi: true 
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
     },
   ],
   bootstrap: [AppComponent]

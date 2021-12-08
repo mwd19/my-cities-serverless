@@ -1,112 +1,70 @@
 <h1>Places</h1>
 
-<p>Here's a list of places: feel free to play with it.</p>
+<p>Here's a list of your places: feel free to play with it.</p>
 
 <p *ngIf="!places"><em>Loading...</em></p>
 
 <div class="commands text-right">
-  <button pButton type="button" icon="pi pi-plus" class="p-button-raised p-button-rounded p-button-success" 
-                  style="margin-top:2px; margin-right:2px; height:80px; width:80px;"
-          [routerLink]="['/place']">
+  <button pButton type="button" icon="pi pi-plus" class="p-button-raised p-button-rounded p-button-success"
+    style="margin-top:2px; margin-right:2px; height:60px; width:60px;" [routerLink]="['/place']">
   </button>
 </div>
 
-<!-- <mat-form-field [hidden]="!places">
-    <input matInput (keyup)="onFilterTextChanged($event.target.value)"
-        placeholder="Filter by name (or part of it)...">
-</mat-form-field> -->
-
-    <div class="card" *ngIf="places" style="margin-top:10px">
-      <p-dataView #dv [value]="places" [paginator]="true" [rows]="9" filterBy="name"
-          [sortField]="sortField" [sortOrder]="sortOrder" layout="grid">
-          <ng-template pTemplate="header">
-              <!-- <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-                  <p-dropdown [options]="sortOptions" [(ngModel)]="sortKey" placeholder="Sort By Name" (onChange)="onSortChange($event)" styleClass="p-mb-2 p-mb-md-0"></p-dropdown>
-                  <span class="p-input-icon-left p-mb-2 p-mb-md-0">
-                      <i class="pi pi-search"></i>
-                      <input type="search" pInputText placeholder="Search by Name" (input)="dv.filter($event.target.value)">
-                  </span>
-                  <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
-              </div> -->
-              <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
-          </ng-template>
-          <ng-template let-place pTemplate="listItem">
-              <div class="p-col-12">
-                  <div class="place-list-item">
-                      <div class="place-list-detail">
-                          <!-- <div class="place-name">{{place.name}}
-                                <a [routerLink]="['/place', place.placeId]">{{place.name}}</a>
-                                <img src={{place.attachmentUrl}} size="small" wrapped>
-                                <button (click)="onPlaceDelete( place.placeId )" pButton type="button" icon="pi pi-trash" class="ui-button-danger"></button>
-                          </div> -->
-                          <div class="place-grid-item-content">
-                            <img src={{place.attachmentUrl}} size="small" wrapped>
-                            <div class="place-category">City: {{place.city}}</div>
-                            <div class="place-category">Country: {{place.country}}</div>
-                            <div class="place-category">Latitude: {{place.latitude}}</div>
-                            <div class="place-category">Longitude: {{place.longitude}}</div>
-                          </div>
-                          <hr class="ui-widget-content" style="border-top:0; border: 1px solid #eebf90 !important;">
-                          <div style="text-align: center;">
-                            <button [routerLink]="['/place', place.placeId]" pButton type="button" icon="pi pi-pencil" class="p-button-raised p-button-rounded p-button-info" style="margin-top:2px; margin-right:2px; height:40px;"></button>
-                            <button (click)="onPlaceDelete( place.placeId )" pButton type="button" icon="pi pi-trash" class="p-button-raised p-button-rounded p-button-danger" style="margin-top:2px; margin-right:2px; height:40px;"></button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </ng-template>
-          <ng-template let-place pTemplate="gridItem">
-              <div style="padding:.5em;" class="ui-g-4 ui-md-4">
-                <p-panel [style]="{'vertical-align': 'middle !important', 'font-size': '1.5rem',
-                'font-weight': '700'}" [header]="place?.name" [styleclass]="center-div">
-                  <div class="place-grid-item card">
-                      <!-- <div class="place-grid-item-top"> -->
-                          <!-- <div> -->
-                              <!-- <a class="place-name" [routerLink]="['/place', place.placeId]">{{place.name}}</a> -->
-                              <!-- <img src={{place.attachmentUrl}} width="200" height="220"> -->
-                              <!-- <img src={{place.attachmentUrl}} size="small" wrapped> -->
-                          <!-- </div> -->
-                      <!-- </div> -->
-                      <div class="place-grid-item-content">
-                        <img src={{place.attachmentUrl}} size="small" wrapped>
-                        <div class="place-category">City: {{place.city}}</div>
-                        <div class="place-category">Country: {{place.country}}</div>
-                        <div class="place-category">Latitude: {{place.latitude}}</div>
-                        <div class="place-category">Longitude: {{place.longitude}}</div>
-                      </div>
-                      <hr class="ui-widget-content" style="border-top:0; border: 1px solid #eebf90 !important;">
-                      <div style="text-align: center;">
-                        <button [routerLink]="['/place', place.placeId]" pButton type="button" icon="pi pi-pencil" class="p-button-raised p-button-rounded p-button-info" style="margin-top:2px; margin-right:2px; height:40px;"></button>
-                        <button (click)="onPlaceDelete( place.placeId )" pButton type="button" icon="pi pi-trash" class="p-button-raised p-button-rounded p-button-danger" style="margin-top:2px; margin-right:2px; height:40px;"></button>
-                      </div>
-                  </div>
-                </p-panel>
-            </div>
-          </ng-template>
-      </p-dataView>
-      
-      <p-dialog style="text-align: center;" header={{selectedPlace?.name}} [(visible)]="displayDialog"
-        [responsive]="true" showEffect="fade" [modal]="true" [style]="{width: '450px'}" (onAfterHide)="onDialogHide()">
-        <div class="ui-g" *ngIf="selectedPlace" style="text-align:center">
-
-            <div class="ui-g-12" style="text-align:center">
-                <h1 style='color:#2769be;'> {{selectedPlace?.name}}</h1>
-
-                <div class="ui-g-12 ui-md-4">
-                    <p style='font-size: 200;'><strong>Latitude :
-                        </strong>{{selectedPlace?.latitude}}</p>
-                    <p style='font-size: 200;'><strong>Longitude :
-                        </strong>{{selectedPlace?.longitude}}</p>
-                </div>
-                <div class="ui-g-12 ui-md-4">
-                    <p style='font-size: 200;'><strong>City :
-                        </strong>{{selectedPlace?.city}}</p>
-                </div>
-                <div class="ui-g-12 ui-md-4">
-                    <p style='font-size: 200;'><strong>Country :
-                        </strong>{{selectedPlace?.country}}</p>
-                </div>
-            </div>
+<div class="card" *ngIf="places" style="margin-top:10px">
+  <p-dataView #dv [value]="places" [paginator]="true" [rows]="9" filterBy="name" [sortField]="sortField"
+    [sortOrder]="sortOrder" layout="grid">
+    <ng-template let-place pTemplate="gridItem">
+      <div style="padding:.5em;" class="ui-g-4 ui-md-4">
+        <!-- <p-panel [style]="{'text-align':'center !important', 'vertical-align': 'middle !important', 'font-size': '1.5rem',
+                'font-weight': '700'}"> -->
+        <div class="place-grid-item card">
+          <div class="place-grid-item-content">
+            <div class="place-category" [style]="{'font-size': '2rem', 'font-weight': '700'}">{{place.name}}</div>
+            <img src={{place.attachmentUrl}} size="small" wrapped>
+            <div class="place-category">City: <strong>{{place.city}}</strong></div>
+            <div class="place-category">Country: <strong>{{place.country}}</strong></div>
+            <div class="place-category">Latitude: <strong>{{place.latitude}}</strong></div>
+            <div class="place-category">Longitude: <strong>{{place.longitude}}</strong></div>
+          </div>
+          <!-- <p-gmap #gmap [style]="{'width':'100%','height':'320px', 'margin-bottom': '1em'}" [optionsTab[0]]="options"
+                        [overlays]="overlays"></p-gmap> -->
+          <hr class="ui-widget-content" style="border-top:0; border: 1px solid #eebf90 !important;">
+          <div style="text-align: center;">
+            <button [routerLink]="['/place', place.placeId]" pButton type="button" icon="pi pi-pencil"
+              class="p-button-raised p-button-rounded p-button-info"
+              style="margin-top:2px; margin-bottom:10px; margin-right:2px; height:40px;"></button>
+            <button (click)="onPlaceDelete( place.placeId )" pButton type="button" icon="pi pi-trash"
+              class="p-button-raised p-button-rounded p-button-danger"
+              style="margin-top:2px; margin-bottom:10px; margin-right:2px; height:40px;"></button>
+          </div>
         </div>
-    </p-dialog>
+        <!-- </p-panel> -->
+      </div>
+    </ng-template>
+  </p-dataView>
+
+  <p-dialog style="text-align: center;" header={{selectedPlace?.name}} [(visible)]="displayDialog" [responsive]="true"
+    showEffect="fade" [modal]="true" [style]="{width: '450px, text-align:center'}" (onAfterHide)="onDialogHide()">
+    <div class="ui-g" *ngIf="selectedPlace" style="text-align:center">
+
+      <div class="ui-g-12" style="text-align:center">
+        <h1 style='color:#2769be;'> {{selectedPlace?.name}}</h1>
+
+        <div class="ui-g-12 ui-md-4">
+          <p style='font-size: 200;'><strong>Latitude :
+            </strong>{{selectedPlace?.latitude}}</p>
+          <p style='font-size: 200;'><strong>Longitude :
+            </strong>{{selectedPlace?.longitude}}</p>
+        </div>
+        <div class="ui-g-12 ui-md-4">
+          <p style='font-size: 200;'><strong>City :
+            </strong>{{selectedPlace?.city}}</p>
+        </div>
+        <div class="ui-g-12 ui-md-4">
+          <p style='font-size: 200;'><strong>Country :
+            </strong>{{selectedPlace?.country}}</p>
+        </div>
+      </div>
     </div>
+  </p-dialog>
+</div>

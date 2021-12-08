@@ -1,18 +1,15 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-// import { HttpClient, HttpParams } from '@angular/common/http';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Place } from './place';
 import { PlaceService } from './place.service';
-import { ApiResult } from '../base.service';
 
-import {SelectItem} from 'primeng/api';
+import { SelectItem } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+declare var google: any
 
 @Component({
   selector: 'app-places',
@@ -20,22 +17,15 @@ import { PrimeNGConfig } from 'primeng/api';
   styleUrls: ['./places.component.scss']
 })
 export class PlacesComponent implements OnInit {
-  public displayedColumns: string[] = ['id', 'name', 'latitude', 'longitude', 'city', 'country'];
+
   public places: Place[];
 
-  selectedPlace: Place;
-  displayDialog: boolean;
+  public optionsTab: any[] = [];
+  public overlays: any[] = [];
+  public infoWindow: any;
 
-  defaultPageIndex: number = 0;
-  defaultPageSize: number = 10;
-  public defaultSortColumn: string = "name";
-  public defaultSortOrder: string = "asc";
-
-  defaultFilterColumn: string = "name";
-  filterQuery: string = null;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  countries: any[];
+  selectedCountry: any;
 
   filterTextChanged: Subject<string> = new Subject<string>();
 
@@ -47,82 +37,73 @@ export class PlacesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadData(null);
+    this.loadData();
 
-    this.sortOptions = [
-      {label: 'Name High to Low', value: '!price'},
-      {label: 'Name Low to High', value: 'price'}
+    // this.options = {
+    //   center: { lat: 36.9177, lng: 30.7854 },
+    //   zoom: 12
+    // };
+    // // this.overlays = [new google.maps.Marker({ position: { lat: 36.15, lng: 5.43333 }, title: "Konyaaltiiiiiiii" })];
+    // this.initOverlays();
+    // this.infoWindow = new google.maps.InfoWindow();
+
+    // this.options = {
+    //       center: {lat: 36.890257, lng: 30.707417},
+    //       zoom: 12
+    //   };
+
+    this.overlays = [
+      new google.maps.Marker({ position: { lat: 36.879466, lng: 30.667648 }, title: "Konyaalti" }),
+      new google.maps.Marker({ position: { lat: 36.883707, lng: 30.689216 }, title: "Ataturk Park" }),
+      new google.maps.Marker({ position: { lat: 36.885233, lng: 30.702323 }, title: "Oldtown" }),
+      new google.maps.Polygon({
+        paths: [
+          { lat: 36.9177, lng: 30.7854 }, { lat: 36.8851, lng: 30.7802 }, { lat: 36.8829, lng: 30.8111 }, { lat: 36.9177, lng: 30.8159 }
+        ], strokeOpacity: 0.5, strokeWeight: 1, fillColor: '#1976D2', fillOpacity: 0.35
+      }),
+      new google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
+      new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
     ];
+
     this.primengConfig.ripple = true;
   }
 
-  selectPlace(event: Event, place: Place) {
-    console.log(place);
-    this.selectedPlace = place;
-    this.displayDialog = true;
-    event.preventDefault();
+  initOptions() {
+    this.places.forEach(place => {
+      this.optionsTab.push({
+        center: { lat: place.latitude, lng: place.longitude },
+        zoom: 12
+      })
+    });
   }
 
-  onDialogHide() {
-    this.selectedPlace = null;
-  }
-
-  // debounce filter text changes
-  onFilterTextChanged(filterText: string) {
-    if (this.filterTextChanged.observers.length === 0) {
-      this.filterTextChanged
-        .pipe(debounceTime(1000), distinctUntilChanged())
-        .subscribe(query => {
-          this.loadData(query);
-        });
+  initOverlays() {
+    if (!this.overlays || !this.overlays.length) {
+      this.overlays = [
+        new google.maps.Marker({ position: { lat: 36.15, lng: 5.43333 }, title: "Konyaalti" }),
+        new google.maps.Polygon({
+          paths: [
+            { lat: 36.9177, lng: 30.7854 }, { lat: 36.8851, lng: 30.7802 }, { lat: 36.8829, lng: 30.8111 }, { lat: 36.9177, lng: 30.8159 }
+          ], strokeOpacity: 0.5, strokeWeight: 1, fillColor: '#1976D2', fillOpacity: 0.35
+        }),
+      ];
     }
-    this.filterTextChanged.next(filterText);
   }
 
-  loadData(query: string = null) {
-    var pageEvent = new PageEvent();
-    pageEvent.pageIndex = this.defaultPageIndex;
-    pageEvent.pageSize = this.defaultPageSize;
-    if (query) {
-      this.filterQuery = query;
-    }
-    this.getData(pageEvent);
+  loadData() {
+    this.getData();
   }
 
-  getData(event: PageEvent) {
+  getData() {
 
-    var sortColumn = (this.sort)
-      ? this.sort.active
-      : this.defaultSortColumn;
-
-    var sortOrder = (this.sort)
-      ? this.sort.direction
-      : this.defaultSortOrder;
-
-    var filterColumn = (this.filterQuery)
-      ? this.defaultFilterColumn
-      : null;
-
-    var filterQuery = (this.filterQuery)
-      ? this.filterQuery
-      : null;
-
-    this.placeService.getData<ApiResult<Place>>(
-      event.pageIndex,
-      event.pageSize,
-      sortColumn,
-      sortOrder,
-      filterColumn,
-      filterQuery
-      )
+    this.placeService.getData<Place>()
       .subscribe(result => {
-        // this.paginator.length = result.totalCount;
-        // this.paginator.pageIndex = result.pageIndex;
-        // this.paginator.pageSize = result.pageSize;
-        console.log(result.items);
         this.places = result.items;
-        console.log(this.places); 
-      }, error => console.error(error));
+        console.log(this.places);
+      }, error => {
+        console.error(error);
+        alert(error.error.message);
+      });
   }
 
   onPlaceDelete(placeId: string) {
@@ -130,10 +111,13 @@ export class PlacesComponent implements OnInit {
       this.placeService.delete(placeId).subscribe(result => {
         alert("Place " + placeId + " has been deleted.");
         console.log("Place " + placeId + " has been deleted.");
-        this.loadData(null);
-      }, error => console.error(error));
+        this.loadData();
+      }, error => {
+        console.error(error);
+        alert(error.error.message);
+      });
     } catch {
-      alert('Todo deletion failed')
+      alert('Place deletion failed');
     }
   }
 

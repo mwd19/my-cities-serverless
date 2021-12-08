@@ -24,6 +24,9 @@
   },
   "required": [
     "name",
+    "latitude",
+    "longitude",
+    "city",
     "country"
   ],
   "additionalProperties": false

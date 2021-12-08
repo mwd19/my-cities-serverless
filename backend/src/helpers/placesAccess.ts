@@ -64,7 +64,7 @@ export class PlacesAccess {
                 userId: userId,
                 placeId: placeId
             },
-            UpdateExpression: "set #name = :name, #city=:city, #country=:country",
+            UpdateExpression: "set #name = :name, #latitude=:latitude, #longitude=:longitude, #city=:city, #country=:country",
             ExpressionAttributeValues: {
                 ":name": placeUpdate.name,
                 ":latitude": placeUpdate.latitude,
@@ -75,7 +75,9 @@ export class PlacesAccess {
             ExpressionAttributeNames: {
                 '#name': 'name',
                 '#city': 'city',
-                '#country': 'country'
+                '#country': 'country',
+                '#latitude': 'latitude',
+                '#longitude': 'longitude'
             },
             ReturnValues: "UPDATED_NEW"
         }).promise()
